@@ -31,12 +31,12 @@ def create_treeview(tab, table_name):
     tree.pack(expand=True, fill='both')
     return tree
 
-# Connect to the Aronium backup database
-conn = sqlite3.connect('aronium-database.db')
+# Connect to the backup database
+conn = sqlite3.connect('database.db')
 
 # Create the main window
 window = tk.Tk()
-window.title("Aronium Database Viewer")
+window.title("Database Viewer")
 
 # Make the window full screen
 window.attributes('-fullscreen', True)
