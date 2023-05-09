@@ -31,36 +31,79 @@ def create_treeview(tab, table_name):
     tree.pack(expand=True, fill='both')
     return tree
 
-# Connect to the backup database
-conn = sqlite3.connect('database.db')
+def view_table():
+    # Get the selected table from the Listbox
+    selected_table = listbox.get(listbox.curselection())
+
+    # Create a new tab for the selected table
+    table_tab = ttk.Frame(notebook)
+    table_treeview = create_treeview(table_tab, selected_table)
+    notebook.add(table_tab, text=selected_table)
+
+    # Switch to the new tab
+    notebook.select(table_tab)
+
+# Create the main window and notebook
 
 # Create the main window
 window = tk.Tk()
-window.title("Database Viewer")
+window.columnconfigure(0, weight=1)
+window.rowconfigure(0, weight=1)
+window.title("Aronium Database Viewer")
+
+# Connect to the Aronium backup database
+conn = sqlite3.connect('database.db')
 
 # Make the window full screen
 window.attributes('-fullscreen', True)
 
 # Create a notebook (tabbed interface)
 notebook = ttk.Notebook(window)
+notebook.grid(column=0, row=0, columnspan=10, rowspan=10, sticky='nsew')
+# Create the "Home" tab
+home_tab = ttk.Frame(notebook)
+home_tab.columnconfigure(0, weight=1)
+home_tab.columnconfigure(1, weight=1)
+home_tab.columnconfigure(2, weight=1)
+home_tab.columnconfigure(3, weight=1)
+home_tab.columnconfigure(4, weight=1)
+home_tab.columnconfigure(5, weight=1)
+home_tab.columnconfigure(6, weight=1)
+home_tab.columnconfigure(7, weight=1)
+home_tab.columnconfigure(8, weight=1)
+home_tab.columnconfigure(9, weight=1)
+home_tab.rowconfigure(0, weight=1)
+home_tab.rowconfigure(1, weight=1)
+home_tab.rowconfigure(2, weight=1)
+home_tab.rowconfigure(3, weight=1)
+home_tab.rowconfigure(4, weight=1)
+home_tab.rowconfigure(5, weight=1)
+home_tab.rowconfigure(6, weight=1)
+home_tab.rowconfigure(7, weight=1)
+home_tab.rowconfigure(8, weight=1)
+home_tab.rowconfigure(9, weight=1)
+notebook.add(home_tab, text='Home')
+
+# Create a Listbox in the "Home" tab
+listbox = tk.Listbox(home_tab)
+listbox.grid(column=0, row=5, columnspan=5, rowspan=5, sticky='nsew')
+
+# Create a "View Table" button in the "Home" tab
+view_button = tk.Button(home_tab, text="View Table")
+view_button.grid(column=6, row=0)
 
 # Get the table names from the database
 cursor = conn.cursor()
 cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
 tables = cursor.fetchall()
 
-# Create tabs and Treeview widgets for each table
+# Insert table names into the Listbox
 for table in tables:
+    
     table_name = table[0]
-    table_tab = ttk.Frame(notebook)
-    table_treeview = create_treeview(table_tab, table_name)
-    notebook.add(table_tab, text=table_name)
-
-# Pack the notebook widget
-notebook.pack(expand=True, fill='both')
-
+    print("name: " + str(table_name))
+    listbox.insert('end', table_name)
+    
 # Start the main event loop
 window.mainloop()
 
-# Close the database connection
-conn.close()
